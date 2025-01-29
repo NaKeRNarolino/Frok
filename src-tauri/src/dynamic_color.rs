@@ -3,10 +3,11 @@ use winreg::RegKey;
 
 #[tauri::command]
 pub fn get_windows_accent_color() -> [u8; 3] {
-    let hkey_current_user = match RegKey::predef(HKEY_CURRENT_USER).open_subkey("SOFTWARE\\Microsoft\\Windows\\DWM") {
-        Ok(key) => key,
-        Err(_) => return [0, 255, 0],
-    };
+    let hkey_current_user =
+        match RegKey::predef(HKEY_CURRENT_USER).open_subkey("SOFTWARE\\Microsoft\\Windows\\DWM") {
+            Ok(key) => key,
+            Err(_) => return [0, 255, 0],
+        };
 
     let color = match hkey_current_user.get_value::<u32, _>("AccentColor") {
         Ok(value) => value,

@@ -3,12 +3,20 @@
   import {cardBgColor, color, colorItself} from "../color";
   import {goto} from "$app/navigation";
   import Card from "../components/card.svelte";
+  import type {ProjectConfig} from "../project";
 
   let bgColor = color(32, 91);
   let textColor = color(78, 14);
 
   function onAnalyzeNew() {
     goto("/analyze_new")
+  }
+
+  async function openExisting() {
+    let configPath = await invoke("select_config");
+    let config: ProjectConfig = await invoke("get_config", { path: configPath });
+
+    await goto(`/file_manager/${configPath}CONFIG2FOLDER${config.project_root}`)
   }
 </script>
 
@@ -19,7 +27,7 @@
     <div id="startup__container">
       <div id="cards__container">
         <div class="startup__card" style="--card-height: 40vh">
-          <Card text="Open a Project">
+          <Card text="Open a Project" onPressed={openExisting}>
             <svg id="open__icon" xmlns="http://www.w3.org/2000/svg" height="8rem" viewBox="0 -960 960 960"><path d="M720-330q0 104-73 177T470-80q-104 0-177-73t-73-177v-370q0-75 52.5-127.5T400-880q75 0 127.5 52.5T580-700v350q0 46-32 78t-78 32q-46 0-78-32t-32-78v-370h80v370q0 13 8.5 21.5T470-320q13 0 21.5-8.5T500-350v-350q-1-42-29.5-71T400-800q-42 0-71 29t-29 71v370q-1 71 49 120.5T470-160q70 0 119-49.5T640-330v-390h80v390Z"/></svg>
           </Card>
         </div>
